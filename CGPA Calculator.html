@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPA Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #61CE70;
+    }
+
+    .course {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #61CE70;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GPA Calculator</h1>
+    <h2>"This is designed according to the requirements of University of Sialkot. Your university might have different ruls."</h2>
+    <h2>Please enter correct details to get an accurate result</h2>
+    <div id="courses">
+      <div class="course">
+        <input type="text" placeholder="Course name">
+        <input type="text" placeholder="Grade (A+, A, A-, B+, B, B-, C+, C, D, F)">
+        <input type="number" placeholder="Credit Hours">
+      </div>
+    </div>
+    <button id="addCourse">Add Course</button>
+    <button id="calculate">Calculate GPA</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const addCourseButton = document.getElementById('addCourse');
+      const calculateButton = document.getElementById('calculate');
+      const coursesContainer = document.getElementById('courses');
+      const resultContainer = document.getElementById('result');
+
+      addCourseButton.addEventListener('click', function() {
+        const courseTemplate = `
+          <div class="course">
+            <input type="text" placeholder="Course name">
+            <input type="text" placeholder="Grade (A+, A, A-, B+, B, B-, C+, C, D, F)">
+            <input type="number" placeholder="Credit Hours">
+          </div>
+        `;
+        coursesContainer.insertAdjacentHTML('beforeend', courseTemplate);
+      });
+
+      calculateButton.addEventListener('click', function() {
+        const courses = document.querySelectorAll('.course');
+        let totalGradePoints = 0;
+        let totalCreditHours = 0;
+
+        courses.forEach(course => {
+          const courseName = course.querySelector('input[type="text"]').value;
+          const grade = course.querySelector('input[type="text"]').value.toUpperCase();
+          const creditHours = parseFloat(course.querySelector('input[type="number"]').value);
+
+          let gradePoints;
+          switch (grade) {
+            case 'A+':
+              gradePoints = 4.0;
+              break;
+            case 'A':
+              gradePoints = 3.7;
+              break;
+            case 'A-':
+              gradePoints = 3.4;
+              break;
+            case 'B+':
+              gradePoints = 3.0;
+              break;
+            case 'B':
+              gradePoints = 2.7;
+              break;
+            case 'B-':
+              gradePoints = 2.4;
+              break;
+            case 'C+':
+              gradePoints = 2.0;
+              break;
+            case 'C':
+              gradePoints = 1.5;
+              break;
+            case 'D':
+              gradePoints = 1.0;
+              break;
+            case 'F':
+              gradePoints = 0.0;
+              break;
+            default:
+              console.log(`Invalid grade '${grade}' for course '${courseName}'. Skipping...`);
+              return;
+          }
+
+          totalGradePoints += gradePoints * creditHours;
+          totalCreditHours += creditHours;
+        });
+
+        let gpa = totalCreditHours === 0 ? 0 : totalGradePoints / totalCreditHours;
+        resultContainer.textContent = `Your GPA is: ${gpa.toFixed(2)}`;
+      });
+    });
+  </script>
+</body>
+</html>
